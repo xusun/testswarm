@@ -67,8 +67,7 @@
 			$runResult = mysql_queryf("SELECT run_client.client_id as client_id, run_client.status as status, run_client.fail as fail, run_client.error as error, run_client.total as total, clients.useragent_id as useragent_id FROM run_client, clients WHERE run_client.run_id=%u AND run_client.client_id=clients.id ORDER BY useragent_id;", $row["run_id"]);
 
 			while ( $ua_row = mysql_fetch_assoc($runResult) ) {
-				if ( !$useragents[ $ua_row['useragent_id'] ] ) {
-					$useragents[ $ua_row['useragent_id'] ] = array();
+				if( ! array_key_exists ($ua_row['useragent_id'], $useragents)){							$useragents[ $ua_row['useragent_id'] ] = array();
 				}
 
 				array_push( $useragents[ $ua_row['useragent_id'] ], $ua_row );
@@ -89,7 +88,7 @@
 
 		$last_browser = -1;
 
-		if ( $useragents[ $row["useragent_id"] ] ) {
+		if ( array_key_exists($row["useragent_id"], $useragents) {
 			foreach ( $useragents[ $row["useragent_id"] ] as $ua ) {
 				$status = get_status2(intval($ua["status"]), intval($ua["fail"]), intval($ua["error"]), intval($ua["total"]));
 				if ( $last_browser != $ua["useragent_id"] ) {
